@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block metadescription %}
+    {% if category %}
+        {{ category.description|truncatewords:155 }}
+    {% else %}
+        Welcome to SweetTreatsMart:Fill Your Cart with Tempting Treats....
+    {% endif %}
+{% endblock %}
+
+{% block title %}
+    {% if category %}
+        {{ category.name }} - SweetTreatsMart
+    {% else %}
+        see our varieties -SweetTreatsMart
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if category %}
+        <div>
+            <div class="row my_row_class">
+                <div class="mx-auto">
+                    <p><a href="{% url 'shop:allProdCat'  %}">Our product Collections</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="mx_auto">
+            <img class="my_image" src="{{category.Image.url}}" alt="{{category.name}}">
+        </div>
+        <br>
+        <div>
+            <h1 class="text-center my_title">{{category.name}}</h1>
+            <p class="text-justify">{{category.description}}</p>
+        </div>
+    {% else %}
+        <div>
+            <img class="my_image_padding" src="{% static 'img/banners.png' %}" alt="our products" height="400px;" width="1300px;">
+        </div>
+        <br>
+        <div>
+            <h1 class="text-center my_title">Our Varieties</h1>
+            <p class="text-justify">Welcome to our delightful world of sweet indulgence! At our sweet store, we take immense pride in offering an extensive array of delectable treats to satisfy your cravings. Whether you have a penchant for crunchy biscuits, melt-in-your-mouth cookies, divine cakes, delectable pastries, traditional ladoo, sugary jilebi, or luscious chocolates, we have it all under one virtual roof. Dive into our treasure trove of sweet varieties, and let your taste buds embark on an unforgettable journey of flavors. Discover the perfect treats to pamper yourself or share with loved ones, and let us be your companion in creating moments of sweetness and joy!</p>
+        </div>
+    {% endif %}
+    <div class="container">
+        <div class="row mx-auto">
+            {% for product in products.object_list %}
+                <div class="my_bottom_margin col-9 col-sm-12 col-md-2 col-lg-4">
+                    <div class="card text-center" style="min-width:18rem;">
+                        <a href="{{product.get_url}}"><img class="card-img-top my_image" src="{{product.Image.url}}" alt="{{product.name}}"></a>
+                        <div class="card-body">
+                            <h4><a href="{{product.get_url}}">{{product.name}}</a></h4>
+                            <p><a href="{{product.get_url}}">{{product.price}}</a></p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="mx-auto">
+            {% if products.paginator.num_pages > 1 %}
+                <hr>
+                <div class="text-center">
+                    {% for pg in products.paginator.page_range %}
+                        <a href="?page={{pg}}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %}">{{pg}}</a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <br>
+    </div>
+{% endblock %}
